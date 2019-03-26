@@ -1,4 +1,4 @@
-You must install tweepy.
+You must install tweepy,
 in your console write :
 ```
 pip install tweepy
