@@ -13,10 +13,10 @@ import sys
 
 # API set up
 
-consumer_key = 'UPBKZkknAwoyGbos7bW7dKUiR'
-consumer_secret = 'FVtQWSKuOAD6SCYVoQXlrFXWfFN2NhJoG0SFohVB9jIeu9dcFr'
-access_token = '1110573743536041985-1ebhe0TJebmquhN93QOEdXlPtIrwUt'
-access_token_secret = 'HGqe2mxxlPhVWyAiF0JsDzpAOYxtjNyPq4xSwPgAuzIXc'
+consumer_key = 'consumer-key'
+consumer_secret = 'consumer-secret'
+access_token = 'access-token'
+access_token_secret = 'access-token-secret'
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
