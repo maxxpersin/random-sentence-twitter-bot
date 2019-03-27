@@ -2,6 +2,9 @@ import tweepy
 import random
 import time
 import sys
+from textgenrnn import textgenrnn
+
+
 
 # Simple Twitter bot
 # This bot tweets a random sentence ever t seconds based on user args
@@ -22,26 +25,29 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-def status_update(n, v, a, t, upper_limit): # Updates the status
+
+def status_update(textgen, timer, upper_limit): # Updates the status
     counter = 0
+    u = 0
     while counter < upper_limit:
         for follower in tweepy.Cursor(api.followers).items(): # Double checks followers
             follower.follow()
-    
-        r1 = random.randrange(0, len(n)) # Getting the randomized indexes
-        r2 = random.randrange(0, len(n))
-        r3 = random.randrange(0, len(v))
-        r4 = random.randrange(0, len(a))
+            for x in list_of_followers:
+                if x == follower.screen_name:
+                    u = u + 1
 
-        w = n[r1] # Getting the word for that index
-        x = n[r2]
-        y = v[r3]
-        z = a[r4]
+            if u is 0:
+                try:
+                    api.update_status(
+                        status="Thanks for the follow @%s" % (follower.screen_name))  # Saying hello to new followers
+                    cur_followers_write.write("%s\n" % (follower.screen_name))  # Saves followers name in file to not duplicate hello messages
+                except:
+                    print("oops")  # Error handling
+            u = 0
 
-        tweet = "%s %s %s %s." % (z, x, y, w) # Concatination
-        api.update_status(status = tweet) # Publishes tweet
+        api.update_status(status=''.join(textgen.generate(return_as_list=True, max_gen_length=280))) # Publishes tweet
         counter = counter + 1
-        time.sleep(t) # Waits for specified time
+        time.sleep(timer) # Waits for specified time
 
 
 # Checking followers
@@ -49,7 +55,7 @@ f = open("curr_followers.txt", "r")
 temp = f.read()
 list_of_followers = temp.splitlines()
 cur_followers_write = open("curr_followers.txt", "a+")
-
+"""
 # Opening word files and parsing them
 noun_file = open("nouns.txt", "r")
 contents = noun_file.read()
@@ -63,7 +69,7 @@ adj_file = open("adjectives.txt", "r")
 contents = adj_file.read()
 a = contents.split()
 
-u = 0
+
 for follower in tweepy.Cursor(api.followers).items():
             follower.follow()
             for x in list_of_followers:
@@ -77,9 +83,11 @@ for follower in tweepy.Cursor(api.followers).items():
                 except:
                     print("oops") # Error handling
             u = 0
-
+"""
 # Status updates based on args
+t = textgenrnn()
+
 if len(sys.argv) == 1:
-    status_update(n, v, a, 0, 1)
+    status_update(t, 0, 1)
 else:
-    status_update(n, v, a, int(sys.argv[1]), int(sys.argv[2]))
+    status_update(t, int(sys.argv[1]), int(sys.argv[2]))
