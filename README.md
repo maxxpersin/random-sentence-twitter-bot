@@ -1,3 +1,5 @@
+To check out a live version of this project, please visit https://twitter.com/hour_random
+
 You must install TensorFlow. Navigate to your cloned directory through your console and type 
 ```
 pip install tensorflow

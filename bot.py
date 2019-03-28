@@ -4,22 +4,22 @@ import time
 import sys
 from textgenrnn import textgenrnn
 
-
-
 # Simple Twitter bot
-# This bot tweets a random sentence ever t seconds based on user args
-# And tweets as many times as specified by the user
+# This bot constructs random tweets using a neural network provided by textgenrnn
+# It can also tweet every t seconds based on user args
 
 # @author Maxx Persin
 # @date 3/26/2019
 # Check out my github at https://github.com/maxxpersin
+# textgenrnn documentation can be found at https://github.com/minimaxir/textgenrnn
+# keras documentation can be found at
 
 # API set up
 
-consumer_key = 'UPBKZkknAwoyGbos7bW7dKUiR'
-consumer_secret = 'FVtQWSKuOAD6SCYVoQXlrFXWfFN2NhJoG0SFohVB9jIeu9dcFr'
-access_token = '1110573743536041985-1ebhe0TJebmquhN93QOEdXlPtIrwUt'
-access_token_secret = 'HGqe2mxxlPhVWyAiF0JsDzpAOYxtjNyPq4xSwPgAuzIXc'
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -60,7 +60,6 @@ def check_followers():
         api.update_status(status="Thanks for the follow @%s" % (nyf.screen_name))  # Saying hello to new followers
         
 
-
 def status_update(textgen, timer, upper_limit): # Updates the status
     counter = 0
     while counter < upper_limit:
@@ -70,17 +69,16 @@ def status_update(textgen, timer, upper_limit): # Updates the status
         counter += 1
         time.sleep(timer) # Waits for specified time
 
-
-# Checking followers
-f = open("curr_followers.txt", "r")
-temp = f.read()
-list_of_followers = temp.splitlines()
-cur_followers = open("curr_followers.txt", "r+")
+def interactive_test(textgen):
+    textgen.train_from_file('..\textgenrnn\datasets\hacker_news_2000.txt', num_epochs=1)
+    textgen.generate()
 
 # Status updates based on args
 t = textgenrnn()
 
+
 if len(sys.argv) == 1:
-    status_update(t, 0, 1)
+    interactive_test(t)
+    #status_update(t, 0, 1)
 else:
     status_update(t, int(sys.argv[1]), int(sys.argv[2]))
