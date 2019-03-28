@@ -1,3 +1,27 @@
+To check out a live version of this project, please visit https://twitter.com/hour_random
+
+You must install TensorFlow. Navigate to your cloned directory through your console and type 
+```
+pip install tensorflow
+```
+After this, you will need to install Keras using git clone (Additional installation procedures can be found at https://github.com/keras-team/keras). In the same directory type
+```
+git clone https://github.com/keras-team/keras.git
+```
+then move into the keras directory and run setup.py
+```
+cd keras
+python setup.py install
+```
+After this, you will need to install the textgenrnn. cd out of the keras folder and follow these steps
+```
+cd ..
+git clone https://github.com/minimaxir/textgenrnn.git
+cd textgenrnn
+python setup.py install
+cd ..
+```
+Now you are back in the main directory
 You must install tweepy,
 in your console write :
 ```
@@ -13,7 +37,7 @@ access_token = 'access-token'
 access_token_secret = 'access-token-secret'
 ```
 
-To run your bot navegate to your cloned directory. argv[1] is how many seconds you desire between tweets, and agrv[2] is how many times you would like the bot to tweet on this particular execution. For example:
+To run your bot navigate to your cloned directory. argv[1] is how many seconds you desire between tweets, and agrv[2] is how many times you would like the bot to tweet on this particular execution. For example:
 ```
 ...\random-sentence-twitter-bot> python bot.py 3600 24
 ```
