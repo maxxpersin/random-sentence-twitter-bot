@@ -70,7 +70,7 @@ def status_update(textgen, timer, upper_limit): # Updates the status
         time.sleep(timer) # Waits for specified time
 
 def interactive_test(textgen):
-    textgen.train_from_file('..\textgenrnn\datasets\hacker_news_2000.txt', num_epochs=1)
+    textgen.train_from_file('subreddit_results.txt', num_epochs=1)
     textgen.generate()
 
 # Status updates based on args
