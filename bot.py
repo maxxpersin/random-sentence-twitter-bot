@@ -25,28 +25,49 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
+def check_followers():
+    followers = []
+    for follower in tweepy.Cursor(api.followers).items():
+        followers.append(follower)
+
+    print ("Found %s followers, finding friends.." % len(followers))
+    friends = []
+    for friend in tweepy.Cursor(api.friends).items():
+        friends.append(friend)
+
+    # creating dictionaries based on id's is handy too
+
+    friend_dict = {}
+    for friend in friends:
+        friend_dict[friend.id] = friend
+
+    follower_dict = {}
+    for follower in followers:
+        follower_dict[follower.id] = follower
+
+    # now we find all your "non_friends" - people who don't follow you
+    # even though you follow them.
+
+    non_followers = [friend for friend in friends if friend.id not in follower_dict] # people who are not following me but i am following them
+    not_yet_following = [follower for follower in followers if follower.id not in friend_dict] # people who are following me but i am not following them
+    
+
+    for nf in non_followers:
+        nf.unfollow() # unfollow non followers
+
+    for nyf in not_yet_following:
+        nyf.follow()
+        api.update_status(status="Thanks for the follow @%s" % (nyf.screen_name))  # Saying hello to new followers
+        
+
 
 def status_update(textgen, timer, upper_limit): # Updates the status
     counter = 0
-    u = 0
     while counter < upper_limit:
-        for follower in tweepy.Cursor(api.followers).items(): # Double checks followers
-            follower.follow()
-            for x in list_of_followers:
-                if x == follower.screen_name:
-                    u = u + 1
-
-            if u is 0:
-                try:
-                    api.update_status(
-                        status="Thanks for the follow @%s" % (follower.screen_name))  # Saying hello to new followers
-                    cur_followers_write.write("%s\n" % (follower.screen_name))  # Saves followers name in file to not duplicate hello messages
-                except:
-                    print("oops")  # Error handling
-            u = 0
+        check_followers()
 
         api.update_status(status=''.join(textgen.generate(return_as_list=True, max_gen_length=280))) # Publishes tweet
-        counter = counter + 1
+        counter += 1
         time.sleep(timer) # Waits for specified time
 
 
@@ -54,36 +75,8 @@ def status_update(textgen, timer, upper_limit): # Updates the status
 f = open("curr_followers.txt", "r")
 temp = f.read()
 list_of_followers = temp.splitlines()
-cur_followers_write = open("curr_followers.txt", "a+")
-"""
-# Opening word files and parsing them
-noun_file = open("nouns.txt", "r")
-contents = noun_file.read()
-n = contents.split()
+cur_followers = open("curr_followers.txt", "r+")
 
-verb_file = open("verbs.txt", "r")
-contents = verb_file.read()
-v = contents.split()
-
-adj_file = open("adjectives.txt", "r")
-contents = adj_file.read()
-a = contents.split()
-
-
-for follower in tweepy.Cursor(api.followers).items():
-            follower.follow()
-            for x in list_of_followers:
-                if x == follower.screen_name:
-                    u = u + 1
-            
-            if u is 0:
-                try:
-                    api.update_status(status = "Thanks for the follow @%s" % (follower.screen_name)) # Saying hello to new followers
-                    cur_followers_write.write("%s\n" % (follower.screen_name)) # Saves followers name in file to not duplicate hello messages
-                except:
-                    print("oops") # Error handling
-            u = 0
-"""
 # Status updates based on args
 t = textgenrnn()
 
