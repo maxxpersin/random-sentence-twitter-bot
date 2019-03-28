@@ -16,10 +16,10 @@ from textgenrnn import textgenrnn
 
 # API set up
 
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
+consumer_key = 'UPBKZkknAwoyGbos7bW7dKUiR'
+consumer_secret = 'FVtQWSKuOAD6SCYVoQXlrFXWfFN2NhJoG0SFohVB9jIeu9dcFr'
+access_token = '1110573743536041985-1ebhe0TJebmquhN93QOEdXlPtIrwUt'
+access_token_secret = 'HGqe2mxxlPhVWyAiF0JsDzpAOYxtjNyPq4xSwPgAuzIXc'
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -65,16 +65,16 @@ def status_update(textgen, timer, upper_limit): # Updates the status
     while counter < upper_limit:
         check_followers()
 
-        api.update_status(status=''.join(textgen.generate(return_as_list=True, max_gen_length=280))) # Publishes tweet
+        api.update_status(status=''.join(textgen.generate(3, temperature = 1.0, return_as_list=True, max_gen_length=280))) # Publishes tweet
         counter += 1
         time.sleep(timer) # Waits for specified time
 
 def interactive_test(textgen):
-    textgen.train_from_file('subreddit_results.txt', num_epochs=1)
-    textgen.generate()
+    #textgen.train_from_file('subreddit_results.txt', num_epochs=1)
+    textgen.generate(3, temperature=1.0, max_gen_length=280)
 
 # Status updates based on args
-t = textgenrnn()
+t = textgenrnn("textgenrnn_weights.hdf5")
 
 
 if len(sys.argv) == 1:
