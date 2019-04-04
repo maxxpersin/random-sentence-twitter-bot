@@ -2,6 +2,7 @@ import tweepy
 import random
 import time
 import sys
+import os
 from textgenrnn import textgenrnn
 
 # Simple Twitter bot
@@ -65,20 +66,22 @@ def status_update(textgen, timer, upper_limit): # Updates the status
     while counter < upper_limit:
         check_followers()
 
-        api.update_status(status=''.join(textgen.generate(3, temperature = 1.0, return_as_list=True, max_gen_length=280))) # Publishes tweet
+        api.update_status(status=''.join(textgen.generate(temperature=1, return_as_list=True, max_gen_length=280))) # Publishes tweet
         counter += 1
         time.sleep(timer) # Waits for specified time
 
-def interactive_test(textgen):
-    #textgen.train_from_file('subreddit_results.txt', num_epochs=1)
-    textgen.generate(3, temperature=1.0, max_gen_length=280)
+def training(textgen, filename, e):
+    textgen.train_from_file(filename, num_epochs=int(e))
+    textgen.generate()
 
 # Status updates based on args
-t = textgenrnn("textgenrnn_weights.hdf5")
-
-
 if len(sys.argv) == 1:
-    interactive_test(t)
-    #status_update(t, 0, 1)
+    t = textgenrnn("textgenrnn_weights.hdf5")
+    status_update(t, 0, 1)
+elif sys.argv[1] == "train":
+    os.remove("textgenrnn_weights.hdf5")
+    t = textgenrnn()
+    training(t, sys.argv[2], sys.argv[3])
 else:
+    t = textgenrnn("textgenrnn_weights.hdf5")
     status_update(t, int(sys.argv[1]), int(sys.argv[2]))
