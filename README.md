@@ -36,6 +36,10 @@ consumer_secret = 'consumer-secret'
 access_token = 'access-token'
 access_token_secret = 'access-token-secret'
 ```
+To train your bot, place your text file into your cloned directory and run with argv[1] as the file to train the bot on, and argv[2] as the number of epochs
+```
+...\random-sentence-twitter-bot> python bot.py train your_file_name.txt 150
+```
 
 To run your bot navigate to your cloned directory. argv[1] is how many seconds you desire between tweets, and agrv[2] is how many times you would like the bot to tweet on this particular execution. For example:
 ```
