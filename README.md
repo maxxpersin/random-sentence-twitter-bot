@@ -50,4 +50,4 @@ To run the bot only once, simply ommit argv[1] and argv[2]:
 ```
 ...\random-sentence-twitter-bot> python bot.py
 ```
-Every execution of this code will also check for new followers and add them to the curr_followers.txt file. It will also tweet a thank you to any new users.
+Every execution of this code will also check for new followers and unfollow any non followers.
